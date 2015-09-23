@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>nownab.log</title>
+  <subtitle>logger.level = Logger::DEBUG</subtitle>
+  <id>http://nownabe.com/blog</id>
+  <link href="http://nownabe.com/blog"/>
+  <link href="http://nownabe.com/blog/feed.xml" rel="self"/>
+  <updated>2015-09-21T15:00:00+00:00</updated>
+  <author>
+    <name>Blog Author</name>
+  </author>
+  <entry>
+    <title>Example Article</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/09/22/test.html"/>
+    <id>http://nownabe.com/blog/2015/09/22/test.html</id>
+    <published>2015-09-21T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;This is an example article.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Gem in a Boxの冗長化</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/08/31/redundant-geminabox.html"/>
+    <id>http://nownabe.com/blog/2015/08/31/redundant-geminabox.html</id>
+    <published>2015-08-30T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;Gem in a Box冗長化の情報があんまりない気がしたのでQiitaに記事を書きました。
+みんなどうやってるんだろう。（そもそも同期とか冗長化とかいらない場合も多そう）&lt;/p&gt;
+
+&lt;p&gt;[http://qiita.com/nownabe/items/bd3f9328b314b6c0adf6:embed:cite]&lt;/p&gt;
+
+&lt;p&gt;この記事はデータの同期だけなので、フェイルオーバーはVIPなりLBなりでやればいいと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;新しいGemがPushされたときすぐさま同期したい&lt;/li&gt;
+  &lt;li&gt;ミドルウェアレイヤーでめんどくさいことしたくない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;って時にいいんじゃないかと思います。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>お名前.comからIDCF DNSに移行した話</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/08/10/idcf-dns.html"/>
+    <id>http://nownabe.com/blog/2015/08/10/idcf-dns.html</id>
+    <published>2015-08-09T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;ネームサーバーをお名前.comからIDCF DNSに移行しました。&lt;/p&gt;
+
+&lt;p&gt;IDCF DNSは1ドメイン50円で100レコードまでなら使い放題です（クエリ数に関係ない）。
+お名前.comはドメイン取得のおまけで無料なので、50円余分に払わないといけません。
+とはいえまあ50円です笑&lt;/p&gt;
+
+&lt;p&gt;APIで操作できるので動的にレコードが変化するようなドメインのDNSとしてはよさそうです。
+ということでなけなしの50円を払いお名前.comから移行することにしました。&lt;/p&gt;
+
+&lt;h1 id="section"&gt;流れ&lt;/h1&gt;
+&lt;p&gt;移行の流れとしては、次のようになります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;IDCF DNSに登録する&lt;/li&gt;
+  &lt;li&gt;IDCF DNSにゾーンを作成する&lt;/li&gt;
+  &lt;li&gt;IDCF DNSにレコードを登録する&lt;/li&gt;
+  &lt;li&gt;IDCF DNSでドメインを認証する&lt;/li&gt;
+  &lt;li&gt;ネームサーバーを切り替える&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id="idcf-dns"&gt;IDCF DNSに登録する&lt;/h1&gt;
+&lt;p&gt;こちらにアクセスします。
+[https://console.idcfcloud.com/dns/]&lt;/p&gt;
+
+&lt;p&gt;多分登録画面とかログイン画面とか出てくるはず。。。&lt;/p&gt;
+
+&lt;h1 id="idcf-dns-1"&gt;IDCF DNSにゾーン作成&lt;/h1&gt;
+&lt;p&gt;無事にログインできるとこんな画面が出るので、「ゾーン作成」をクリックします。
+[f:id:nownabe:20150809205557p:plain]&lt;/p&gt;
+
+&lt;p&gt;作成画面が出てくるので、ドメインやメールアドレスを入力します。
+ドメインがそのままゾーン名となります。hogehoge.comみたいな感じです。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809205809p:plain]&lt;/p&gt;
+
+&lt;p&gt;これでゾーンが作成されました。&lt;/p&gt;
+
+&lt;h1 id="idcf-dns-2"&gt;IDCF DNSにレコード登録&lt;/h1&gt;
+&lt;p&gt;次はレコードを登録していきます。&lt;/p&gt;
+
+&lt;p&gt;ゾーンが作成されると、このようにゾーン一覧に新しいゾーンが表示されます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809210127p:plain]&lt;/p&gt;
+
+&lt;p&gt;ゾーン名をクリックすると、SOAレコードやNSレコードが登録されていることがわかります。
+右上の「レコード登録」から今登録してあるレコードを登録していきます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809210257p:plain]&lt;/p&gt;
+
+&lt;p&gt;今のところ登録できるレコードはA、CNAME、AAAA、MX、TXT、SRVのみです。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809210513p:plain]&lt;/p&gt;
+
+&lt;p&gt;こんな感じで、お名前.comと差異がないようにします。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150810234436p:plain]&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809211023p:plain]&lt;/p&gt;
+
+&lt;h1 id="idcd-dns"&gt;IDCD DNSでドメイン認証&lt;/h1&gt;
+&lt;p&gt;ドメインの所有者であるということを確認するため、ドメインの認証が必要になっています。&lt;/p&gt;
+
+&lt;p&gt;IDCF DNSのゾーンページの、「認証する」をクリックします。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809211457p:plain]&lt;/p&gt;
+
+&lt;p&gt;すると、このような認証方法が書かれたモーダルが表示されます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809213245p:plain]&lt;/p&gt;
+
+&lt;p&gt;モザイクばかりでわかりにくいですが、、、今回は新規ドメインではないので1番の方法を使用します。
+よくあるTXTレコードに認証文字列を登録する方法です。&lt;/p&gt;
+
+&lt;p&gt;お名前.comの方で、TXTレコードを登録します。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809211943p:plain]&lt;/p&gt;
+
+&lt;p&gt;digコマンドでTXTレコードが確認できたら、準備完了です。&lt;/p&gt;
+
+&lt;p&gt;```bash
+$ dig @157.7.32.53 hogehoge.com. TXT&lt;/p&gt;
+
+&lt;p&gt;; «» DiG 9.8.3-P1 «» @157.7.32.53 hogehoge.com. TXT
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -»HEADER«- opcode: QUERY, status: NOERROR, id: 53710
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 4, ADDITIONAL: 6
+;; WARNING: recursion requested but not available&lt;/p&gt;
+
+&lt;p&gt;;; QUESTION SECTION:
+;hogehoge.com.      IN  TXT&lt;/p&gt;
+
+&lt;p&gt;;; ANSWER SECTION:
+hogehoge.com.   3600  IN  TXT "idcf-dns-token=xxxxxxxxxxxxxxxxxxxxxxxx"&lt;/p&gt;
+
+&lt;p&gt;;; AUTHORITY SECTION:
+hogehoge.com.   86400 IN  NS  02.dnsv.jp.
+hogehoge.com.   86400 IN  NS  01.dnsv.jp.
+hogehoge.com.   86400 IN  NS  03.dnsv.jp.
+hogehoge.com.   86400 IN  NS  04.dnsv.jp.&lt;/p&gt;
+
+&lt;p&gt;;; ADDITIONAL SECTION:
+01.dnsv.jp.   86400 IN  A 157.7.32.53
+02.dnsv.jp.   86400 IN  A 157.7.33.53
+03.dnsv.jp.   86400 IN  A 157.7.32.35
+03.dnsv.jp.   86400 IN  AAAA  2400:8500:3000::53
+04.dnsv.jp.   86400 IN  A 157.7.33.35
+04.dnsv.jp.   86400 IN  AAAA  2400:8500:3fff::53&lt;/p&gt;
+
+&lt;p&gt;;; Query time: 6 msec
+;; SERVER: 157.7.32.53#53(157.7.32.53)
+;; WHEN: Sun Aug  9 21:26:58 2015
+;; MSG SIZE  rcvd: 285
+```&lt;/p&gt;
+
+&lt;p&gt;準備ができたら、認証しましょう。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809213232p:plain]&lt;/p&gt;
+
+&lt;p&gt;無事に終わると認証完了とでます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809213342p:plain]&lt;/p&gt;
+
+&lt;p&gt;ちゃんとIDCF DNSのネームサーバーで名前解決できるようになってます。&lt;/p&gt;
+
+&lt;p&gt;```bash
+$ dig @ns01.idcfcloud.com hogehoge.com&lt;/p&gt;
+
+&lt;p&gt;; «» DiG 9.8.3-P1 «» @ns01.idcfcloud.com hogehoge.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -»HEADER«- opcode: QUERY, status: NOERROR, id: 37498
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available&lt;/p&gt;
+
+&lt;p&gt;;; QUESTION SECTION:
+;hogehoge.com.      IN  A&lt;/p&gt;
+
+&lt;p&gt;;; ANSWER SECTION:
+hogehoge.com.   3600  IN  A 1.2.3.4&lt;/p&gt;
+
+&lt;p&gt;;; Query time: 9 msec
+;; SERVER: 210.140.183.65#53(210.140.183.65)
+;; WHEN: Sun Aug  9 21:34:00 2015
+;; MSG SIZE  rcvd: 46
+```&lt;/p&gt;
+
+&lt;h1 id="section-1"&gt;ネームサーバー切り替え&lt;/h1&gt;
+&lt;p&gt;いよいよ、ネームサーバーを切り替えます。&lt;/p&gt;
+
+&lt;p&gt;お名前.comの、「ドメイン設定 &amp;gt; ネームサーバーの変更」を開きます。
+切り替えたいドメインを選択し、「他のネームサーバーを利用」を選びます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809213938p:plain]&lt;/p&gt;
+
+&lt;p&gt;IDCF DNSのネームサーバーを入力し、設定します。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150809214107p:plain]&lt;/p&gt;
+
+&lt;p&gt;これで切り替え完了です。
+digコマンドで確認できます。
+（切り替えに1日〜2日ぐらいかかります）&lt;/p&gt;
+
+&lt;p&gt;```bash
+dig bar.hogehoge.com&lt;/p&gt;
+
+&lt;p&gt;; «» DiG 9.8.3-P1 «» bar.hogehoge.com
+;; global options: +cmd
+;; Got answer:
+;; -»HEADER«- opcode: QUERY, status: NOERROR, id: 7938
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 3, ADDITIONAL: 3&lt;/p&gt;
+
+&lt;p&gt;;; QUESTION SECTION:
+;bar.hogehoge.com.    IN  A&lt;/p&gt;
+
+&lt;p&gt;;; ANSWER SECTION:
+bar.hogehoge.com. 3600  IN  CNAME foo.hogehoge.com.
+foo.hogehoge.com. 3595  IN  A 5.6.7.8&lt;/p&gt;
+
+&lt;p&gt;;; AUTHORITY SECTION:
+hogehoge.com.   3574  IN  NS  ns02.idcfcloud.com.
+hogehoge.com.   3574  IN  NS  ns03.idcfcloud.com.
+hogehoge.com.   3574  IN  NS  ns01.idcfcloud.com.&lt;/p&gt;
+
+&lt;p&gt;;; ADDITIONAL SECTION:
+ns01.idcfcloud.com. 570 IN  A 210.140.183.65
+ns02.idcfcloud.com. 570 IN  A 202.234.29.33
+ns03.idcfcloud.com. 570 IN  A 210.152.232.97&lt;/p&gt;
+
+&lt;p&gt;;; Query time: 27 msec
+;; SERVER: 192.168.63.100#53(192.168.63.100)
+;; WHEN: Mon Aug 10 23:36:06 2015
+;; MSG SIZE  rcvd: 186
+```&lt;/p&gt;
+
+&lt;h1 id="section-2"&gt;おわりに&lt;/h1&gt;
+&lt;p&gt;Web UIはシンプルで使いやすくてGoodですね！
+料金がクエリ数に関係ないのも素晴らしい。&lt;/p&gt;
+
+&lt;p&gt;ドメイン取得も一括でできたらなぁ。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>今更Raspberry PiでLチカやってみた</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/08/09/raspberry-pi-lchika.html"/>
+    <id>http://nownabe.com/blog/2015/08/09/raspberry-pi-lchika.html</id>
+    <published>2015-08-08T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;[f:id:nownabe:20150808235527j:plain]&lt;/p&gt;
+
+&lt;p&gt;流行りにのってRaspberry PiでLチカやってみました！（だいぶ乗り遅れてる）&lt;/p&gt;
+
+&lt;p&gt;Raspberry Piは&lt;a href="http://svfes2015.ds.jp-east.idcfcloud.com/index.html"&gt;サバフェス&lt;/a&gt;の賞品でもらったまま眠ってたのがあったので引っ張り出してきました。
+LEDとかは家にあったものを拾い集めました。&lt;/p&gt;
+
+&lt;h1 id="raspberry-pi"&gt;Raspberry Pi準備&lt;/h1&gt;
+&lt;p&gt;OSのインストールや初期設定はQiitaにまとめました。&lt;/p&gt;
+
+&lt;p&gt;[http://qiita.com/nownabe/items/e16b962fcdb1a702093e:embed:cite]&lt;/p&gt;
+
+&lt;p&gt;[http://qiita.com/nownabe/items/a6ec3dfcfcb6ab37ea1e:embed:cite]&lt;/p&gt;
+
+&lt;p&gt;これ以外でやったのはパッケージのアップデートと、&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+sudo apt-get update -y
+sudo apt-get upgrade -y
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;NTP設定です。
+NTPは&lt;code&gt;/etc/ntp.conf&lt;/code&gt;の&lt;code&gt;server&lt;/code&gt;の行をコメントアウトして&lt;code&gt;pool ntp.nict.jp iburst&lt;/code&gt;を追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+#server 0.debian.pool.ntp.org iburst
+#server 1.debian.pool.ntp.org iburst
+#server 2.debian.pool.ntp.org iburst
+#server 3.debian.pool.ntp.org iburst
+pool ntp.nict.jp iburst
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id="l"&gt;Lピカ&lt;/h1&gt;
+&lt;p&gt;GPIOの4番ピンを使います。&lt;/p&gt;
+
+&lt;p&gt;まずはGPIOの4番ピンを使うことを宣言します
+これで&lt;code&gt;/sys/class/gpio/gpio4&lt;/code&gt;というリンクが作成されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+pi@raspberrypi ~ $ sudo echo 4 &amp;gt; /sys/class/gpio/export
+pi@raspberrypi ~ $ ls /sys/class/gpio
+export  gpio4  gpiochip0  unexport
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;GPIO4を出力用に設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+pi@raspberrypi ~ $ sudo echo out &amp;gt; /sys/class/gpio/gpio4/direction
+pi@raspberrypi ~ $ sudo cat /sys/class/gpio/gpio4/direction
+out
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/sys/class/gpio/gpio4/value&lt;/code&gt;に1/0を出力することで、ON/OFFします。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+pi@raspberrypi ~ $ sudo echo 1 &amp;gt; /sys/class/gpio/gpio4/value
+pi@raspberrypi ~ $ sudo echo 0 &amp;gt; /sys/class/gpio/gpio4/value
+pi@raspberrypi ~ $ sudo echo 1 &amp;gt; /sys/class/gpio/gpio4/value
+pi@raspberrypi ~ $ sudo echo 0 &amp;gt; /sys/class/gpio/gpio4/value
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;LEDが光ったり消えたりします。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150808235527j:plain]&lt;/p&gt;
+
+&lt;h1 id="l-1"&gt;Lチカ&lt;/h1&gt;
+&lt;p&gt;点滅させてみます。とりあえずbashで。。。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+while :; do sudo echo 1 &amp;gt; /sys/class/gpio/gpio4/value; sleep 0.001; sudo echo 0 &amp;gt; /sys/class/gpio/gpio4/value; sleep 0.001; done
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;[https://youtu.be/jThq1LOG9IQ:embed:cite]&lt;/p&gt;
+
+&lt;h1 id="section"&gt;電圧？&lt;/h1&gt;
+&lt;p&gt;電圧を測ってみると5Vピンも3Vピンも3.3Vでした。
+う〜んなんでだろう。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150808235625j:plain]&lt;/p&gt;
+
+&lt;p&gt;GNDと畳の電位差はほとんどなかったのでGNDはちゃんととれてるみたいですw
+[f:id:nownabe:20150808235731j:plain]&lt;/p&gt;
+
+&lt;h1 id="section-1"&gt;おわりに&lt;/h1&gt;
+&lt;p&gt;高専時代にやったZ80ぶりのLチカでした。&lt;/p&gt;
+
+&lt;p&gt;最初トランジスタも発見したのでトランジスタでスイッチングしようと思ったんですがうまく行かず。。。
+すっかりもう色々忘れてて歳を感じてやばいのでそのうちやりますw&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>機材紹介：ヘッドホンアンプ</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/05/24/intro-headphone-amp.html"/>
+    <id>http://nownabe.com/blog/2015/05/24/intro-headphone-amp.html</id>
+    <published>2015-05-23T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;p&gt;今日は前回までとはちょっと毛色が違って、音を鳴らすためではなく聴くための機材です。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150524220508j:plain]&lt;/p&gt;
+
+&lt;p&gt;5年か10年か前にヘッドホンアンプ欲しいけど安く済ませたい！ってことで自作したヘッドホンアンプです。NE5532という有名なオペアンプを使ってます。
+もうえらい長いこと使ってますが、まだまだ現役で使えてます。&lt;/p&gt;
+
+&lt;p&gt;配線にLANケーブルを使ってたりケースがふにゃふにゃだったりボリュームにガリが入ってたり手作り感満載ですが、音はとても良いです。
+すっと聴きやすくほんのりパワフルになる感じです。
+元々重め激しめの曲はちょっと軽くおとなしくなってしまいます。&lt;/p&gt;
+
+&lt;p&gt;作るときの一番のミスはICソケット使わなかったことですね。。。
+なぜか基盤に直接半田付けするというアホなことしてしまったので、オペアンプ取り替える遊びができません。
+まあそんな色々聴いても違いはわからんのでいいんですがちょっと残念です。&lt;/p&gt;
+
+&lt;p&gt;というわけで全然Goodに使えてる自作のヘッドホンアンプなんですが、機能が限られてたり使いにくかったりするので普通のヘッドホンアンプも買おうかなーと検討中です。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>超簡単にサーバのデータをIDCFオブストに定期バックアップするItamaeプラグイン</title>
+    <link rel="alternate" href="http://nownabe.com/blog/2015/05/21/backup-to-idcf.html"/>
+    <id>http://nownabe.com/blog/2015/05/21/backup-to-idcf.html</id>
+    <published>2015-05-20T15:00:00+00:00</published>
+    <updated>2015-09-23T07:02:39+00:00</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <content type="html">&lt;h1 id="section"&gt;はじめに&lt;/h1&gt;
+&lt;p&gt;サーバのあるディレクトリ内のファイルを&lt;a href="http://www.idcf.jp/cloud/storage/"&gt;IDCFのオブジェクトストレージ&lt;/a&gt;に定期バックアップする&lt;a href="http://itamae.kitchen/"&gt;Itamae&lt;/a&gt;プラグインを作ったので紹介します！&lt;/p&gt;
+
+&lt;p&gt;[https://github.com/nownabe-infra/itamae-plugin-recipe-idcf-backup_to_object_storage:embed:cite]&lt;/p&gt;
+
+&lt;h1 id="section-1"&gt;結論&lt;/h1&gt;
+&lt;p&gt;作ったのは&lt;code&gt;itamae-plugin-recipe-idcf-backup_to_object_storage&lt;/code&gt;というクソ長い名前のGem（Itamaeプラグイン）です。
+このプラグインを使うと、下の図のように任意の期間のバックアップファイルをオブジェクトストレージに保存することができます。&lt;/p&gt;
+
+&lt;p&gt;[f:id:nownabe:20150521000006p:plain]&lt;/p&gt;
+
+&lt;h1 id="section-2"&gt;概要&lt;/h1&gt;
+&lt;p&gt;このプラグインを使ってプロビジョニングするとどうなるのか簡単に説明します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;バックアップスクリプトが作成される&lt;/li&gt;
+  &lt;li&gt;バックアップスクリプトを叩くcronジョブが作成される&lt;/li&gt;
+  &lt;li&gt;バックアップスクリプトは
+    &lt;ul&gt;
+      &lt;li&gt;指定されたサーバのディレクトリと指定されたオブストのバケットを同期する&lt;/li&gt;
+      &lt;li&gt;指定された期間より古いファイルはサーバからもオブストからも削除する&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;バックアップ実行前に任意のコマンドを実行できる
+    &lt;ul&gt;
+      &lt;li&gt;mysqldumpとかtar zcfとか&lt;/li&gt;
+      &lt;li&gt;このコマンドで、指定したディレクトリ内にバックアップファイルを生成する&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id="section-3"&gt;使い方&lt;/h1&gt;
+&lt;p&gt;## サンプル
+サンプルを見てもらうのが一番はやいと思います。&lt;/p&gt;
+
+&lt;p&gt;[https://github.com/nownabe-infra/example-idcf-backup_to_object_storage:title]&lt;/p&gt;
+
+&lt;h2 id="gemfile"&gt;Gemfile&lt;/h2&gt;
+&lt;p&gt;Gemfileにプラグインを追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ruby
+# Gemfile
+source "https://rubygems.org"
+gem "itamae-plugin-recipe-idcf-backup_to_object_storage"
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;bundle installも忘れずにやっておきましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+$ bundle install
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id="nodeyml"&gt;node.yml&lt;/h2&gt;
+&lt;p&gt;node.ymlでいろいろ設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;yaml
+# node.yml
+idcf:
+  backup_to_object_storage:
+    access_key: YOUR_ACCESS_KEY
+    secret_key: YOUR_SECRET_KEY
+    directories:
+      - schedule: 30 3 * * *
+        path: /backups
+        bucket: backup.yourbucket
+        expire: 7
+        command: mysqldump -u root -x --all-databases &amp;gt; /backups/dump_`date +\%Y\%m\%d\%H\%M`.sql
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;idcf.backup_to_object_storage.access_key&lt;/code&gt;: オブストのアクセスキー&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;idcf.backup_to_object_storage.secret_key&lt;/code&gt;: オブストのシークレットキー&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;idcf.backup_to_object_storage.directories&lt;/code&gt;: バックアップの設定の配列&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;バックアップの設定は、次のようになってます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;schedule&lt;/code&gt;: バックアップを実行するスケジュール。みんなおなじみのcron形式&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;path&lt;/code&gt;: バックアップ元のディレクトリ。この中のファイルをオブストに同期します&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;bucket&lt;/code&gt;: 同期先のバケット&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;expire&lt;/code&gt;: ファイルを保持する期間。ここで設定した日数より前に作成されたファイルは、サーバーからもオブストからも削除されます&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;command&lt;/code&gt;: (optional) バックアップ前に実行するコマンド。だいたいはこのコマンドで&lt;code&gt;path&lt;/code&gt;のディレクトリ内にバックアップファイルを作ることになると思います&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上記のサンプルだと、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;毎日3時30分に&lt;/li&gt;
+  &lt;li&gt;mysqldumpで/backupsディレクトリに全データベースのdumpをとる&lt;/li&gt;
+  &lt;li&gt;7日前より古く作成されたファイルを削除する&lt;/li&gt;
+  &lt;li&gt;/backupsディレクトリをbackup.yourbucketに同期する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;という一連の処理になります。&lt;/p&gt;
+
+&lt;h2 id="recipe"&gt;recipe&lt;/h2&gt;
+&lt;p&gt;recipeには、1行追加するだけでOKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ruby
+# recipe.rb
+include_recipe "idcf-backup_to_object_storage"
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id="section-4"&gt;プロビジョニング&lt;/h2&gt;
+&lt;p&gt;最後に、SSH経由でプロビジョニングします。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+$ bundle exec itamae ssh -h ${YOURHOST} -y node.yml recipe.rb
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;ユーザを指定する場合は&lt;code&gt;-u&lt;/code&gt;オプション、ポートを指定する場合は&lt;code&gt;-p&lt;/code&gt;オプションを使います。&lt;/p&gt;
+
+&lt;p&gt;プロビジョニングが完了してスケジュールが実行されると、オブストにバックアップファイルがアップロードされているはずです。
+コントロールパネルでファイル一覧を表示できるので確認してみてください。&lt;/p&gt;
+
+&lt;h1 id="section-5"&gt;おわりに&lt;/h1&gt;
+&lt;p&gt;プルリクお待ちしております！&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,360 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><title>nownab.log</title><meta content="IE=edge;chrome=1" http-equiv="X-UA-Compatible" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><link href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.light_blue-pink.min.css" rel="stylesheet" /><script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /><link href="../../../stylesheets/blog.css" rel="stylesheet" /><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/blog/feed.xml" /></head><body><div class="mdl-layout mdl-js-layout" id="container"><header><h1 id="title"><a href="/blog">nownab.log</a><small><i class="material-icons md-18">description</i><span id="subtitle">logger.level = Logger::DEBUG</span></small></h1></header><div id="main" role="main"><p>Page 2 of 3</p><p><a href="/blog/">Previous page</a></p><div class="mdl-grid" id="articles"><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/05/21/backup-to-idcf.html">超簡単にサーバのデータをIDCFオブストに定期バックアップするItamaeプラグイン</a><small>May 21</small></h2><h1 id="section">はじめに</h1>
+<p>サーバのあるディレクトリ内のファイルを<a href="http://www.idcf.jp/cloud/storage/">IDCFのオブジェクトストレージ</a>に定期バックアップする<a href="http://itamae.kitchen/">Itamae</a>プラグインを作ったので紹介します！</p>
+
+<p>[https://github.com/nownabe-infra/itamae-plugin-recipe-idcf-backup_to_object_storage:embed:cite]</p>
+
+<h1 id="section-1">結論</h1>
+<p>作ったのは<code>itamae-plugin-recipe-idcf-backup_to_object_storage</code>というクソ長い名前のGem（Itamaeプラグイン）です。
+このプラグインを使うと、下の図のように任意の期間のバックアップファイルをオブジェクトストレージに保存することができます。</p>
+
+<p>[f:id:nownabe:20150521000006p:plain]</p>
+
+<h1 id="section-2">概要</h1>
+<p>このプラグインを使ってプロビジョニングするとどうなるのか簡単に説明します。</p>
+
+<ul>
+  <li>バックアップスクリプトが作成される</li>
+  <li>バックアップスクリプトを叩くcronジョブが作成される</li>
+  <li>バックアップスクリプトは
+    <ul>
+      <li>指定されたサーバのディレクトリと指定されたオブストのバケットを同期する</li>
+      <li>指定された期間より古いファイルはサーバからもオブストからも削除する</li>
+    </ul>
+  </li>
+  <li>バックアップ実行前に任意のコマンドを実行できる
+    <ul>
+      <li>mysqldumpとかtar zcfとか</li>
+      <li>このコマンドで、指定したディレクトリ内にバックアップファイルを生成する</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="section-3">使い方</h1>
+<p>## サンプル
+サンプルを見てもらうのが一番はやいと思います。</p>
+
+<p>[https://github.com/nownabe-infra/example-idcf-backup_to_object_storage:title]</p>
+
+<h2 id="gemfile">Gemfile</h2>
+<p>Gemfileにプラグインを追加します。</p>
+
+<p><code>ruby
+# Gemfile
+source "https://rubygems.org"
+gem "itamae-plugin-recipe-idcf-backup_to_object_storage"
+</code></p>
+
+<p>bundle installも忘れずにやっておきましょう。</p>
+
+<p><code>bash
+$ bundle install
+</code></p>
+
+<h2 id="nodeyml">node.yml</h2>
+<p>node.ymlでいろいろ設定します。</p>
+
+<p><code>yaml
+# node.yml
+idcf:
+  backup_to_object_storage:
+    access_key: YOUR_ACCESS_KEY
+    secret_key: YOUR_SECRET_KEY
+    directories:
+      - schedule: 30 3 * * *
+        path: /backups
+        bucket: backup.yourbucket
+        expire: 7
+        command: mysqldump -u root -x --all-databases &gt; /backups/dump_`date +\%Y\%m\%d\%H\%M`.sql
+</code></p>
+
+<ul>
+  <li><code>idcf.backup_to_object_storage.access_key</code>: オブストのアクセスキー</li>
+  <li><code>idcf.backup_to_object_storage.secret_key</code>: オブストのシークレットキー</li>
+  <li><code>idcf.backup_to_object_storage.directories</code>: バックアップの設定の配列</li>
+</ul>
+
+<p>バックアップの設定は、次のようになってます。</p>
+
+<ul>
+  <li><code>schedule</code>: バックアップを実行するスケジュール。みんなおなじみのcron形式</li>
+  <li><code>path</code>: バックアップ元のディレクトリ。この中のファイルをオブストに同期します</li>
+  <li><code>bucket</code>: 同期先のバケット</li>
+  <li><code>expire</code>: ファイルを保持する期間。ここで設定した日数より前に作成されたファイルは、サーバーからもオブストからも削除されます</li>
+  <li><code>command</code>: (optional) バックアップ前に実行するコマンド。だいたいはこのコマンドで<code>path</code>のディレクトリ内にバックアップファイルを作ることになると思います</li>
+</ul>
+
+<p>上記のサンプルだと、</p>
+
+<ul>
+  <li>毎日3時30分に</li>
+  <li>mysqldumpで/backupsディレクトリに全データベースのdumpをとる</li>
+  <li>7日前より古く作成されたファイルを削除する</li>
+  <li>/backupsディレクトリをbackup.yourbucketに同期する</li>
+</ul>
+
+<p>という一連の処理になります。</p>
+
+<h2 id="recipe">recipe</h2>
+<p>recipeには、1行追加するだけでOKです。</p>
+
+<p><code>ruby
+# recipe.rb
+include_recipe "idcf-backup_to_object_storage"
+</code></p>
+
+<h2 id="section-4">プロビジョニング</h2>
+<p>最後に、SSH経由でプロビジョニングします。</p>
+
+<p><code>bash
+$ bundle exec itamae ssh -h ${YOURHOST} -y node.yml recipe.rb
+</code></p>
+
+<p>ユーザを指定する場合は<code>-u</code>オプション、ポートを指定する場合は<code>-p</code>オプションを使います。</p>
+
+<p>プロビジョニングが完了してスケジュールが実行されると、オブストにバックアップファイルがアップロードされているはずです。
+コントロールパネルでファイル一覧を表示できるので確認してみてください。</p>
+
+<h1 id="section-5">おわりに</h1>
+<p>プルリクお待ちしております！</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/05/20/release-to-geminabox.html">Gem in a Boxに簡単にリリースできるGem作ったけどいっぱいあったのでまとめ</a><small>May 20</small></h2><h1 id="section">はじめに</h1>
+<p>プライベートなGem Serverというか、<a href="https://github.com/geminabox/geminabox">Gem in a Box</a>に手軽にGemをリリースできるようにする<a href="https://github.com/nownabe/geminabox-rake_tasks">geminabox-rake_tasks</a>というGemを作りました。</p>
+
+<p>[https://github.com/nownabe/geminabox-rake_tasks:embed:cite]</p>
+
+<p>このGemを使うと、次の2点が実現できます。</p>
+
+<ul>
+  <li>Rubygems.orgにリリースできない</li>
+  <li>通常のrakeタスクと同じコマンドでGem in a Boxサーバにリリースできる</li>
+</ul>
+
+<p>社内でプライベートなGem ServerをGem in a Boxで構築してる場合など手軽でいいんじゃないかと思います。</p>
+
+<h1 id="section-1">使い方</h1>
+<p>まず、gemspecファイルに次の行を追加します。</p>
+
+<p><code>ruby
+spec.add_development_dependency "geminabox-rake_tasks"
+</code></p>
+
+<p>お決まりのbundle installしてください。</p>
+
+<p><code>
+$ bundle
+</code></p>
+
+<p>Rakefileの<code>require "bundler/gem_tasks"</code>を削除して、次の行を追加します。</p>
+
+<p><code>ruby
+require "geminabox/rake_tasks"
+</code></p>
+
+<p>リリースする前に、Gem in a Boxサーバの設定が必要になります。</p>
+
+<p><code>
+$ bundle exec gem inabox -c
+Enter the root url for your personal geminabox instance (e.g. http://gems/).
+Host:  http://yourgeminabox/
+</code></p>
+
+<p>このコマンドで、<code>./gem/geminabox</code>が設定されます。</p>
+
+<p><code>bash
+$ cat ~/.gem/geminabox
+---
+:host: http://yourgeminabox/
+</code></p>
+
+<p>これでリリースできるようになってます。</p>
+
+<p><code>bash
+$ bundle exec rake release
+testgem 0.1.0 built to pkg/testgem-0.1.0.gem.
+Tagged v0.1.0.
+Pushed git commits and tags.
+Pushed testgem 0.1.0
+</code></p>
+
+<p>[f:id:nownabe:20150520001411p:plain]</p>
+
+<p>他にも、<code>bundler/gem_tasks</code>と同じタスクが使えます。</p>
+
+<p><code>bash
+$ bundle exec rake -T
+rake build          # Build testgem-0.1.0.gem into the pkg directory
+rake install        # Build and install testgem-0.1.0.gem into system gems
+rake install:local  # Build and install testgem-0.1.0.gem into system gems without network access
+rake release        # Create tag v0.1.0 and build and push testgem-0.1.0.gem to your gem in a box server
+</code></p>
+
+<h1 id="section-2">競合</h1>
+<p>よく調べもせずに作ったので、同じようなのがいっぱいありました。</p>
+
+<h2 id="geminabox-release">geminabox-release</h2>
+<p>[https://github.com/dfherr/geminabox-release:title]</p>
+
+<p>Rakefile:
+```ruby
+require "geminabox-release"
+GeminaboxRelease.patch(use_config: true)</p>
+
+<h1 id="geminaboxreleasepathhost-httpyourgeminabox">か、 GeminaboxRelease.path(host: "http://yourgeminabox/")</h1>
+<p>```</p>
+
+<p>Rake Tasks:</p>
+
+<p><code>bash
+$ bundle exec rake -T
+rake build             # Build testgem-0.1.0.gem into the pkg directory
+rake inabox:forcepush  # Build &amp; push testgem-0.1.0.gem overwriting same version to http://localhost:8080
+rake inabox:push       # Build &amp; push testgem-0.1.0.gem to http://localhost:8080
+rake inabox:release    # Create tag v0.1.0 and build and push testgem-0.1.0.gem to http://localhost:8080
+rake install           # Build and install testgem-0.1.0.gem into system gems
+rake install:local     # Build and install testgem-0.1.0.gem into system gems without network access
+rake release           # Create tag v0.1.0 and build and push testgem-0.1.0.gem to Rubygems
+</code></p>
+
+<h2 id="geminabox-rake">geminabox-rake</h2>
+<p>[https://github.com/jgraichen/geminabox-rake:title]</p>
+
+<p>Rakefile:
+<code>ruby
+require "geminabox/rake"
+GeminaboxRake.install
+</code></p>
+
+<p>Rake Tasks:
+<code>bash
+$ bundle exec rake -T
+rake geminabox:build          # Build testgem-0.1.0.gem into the pkg directory
+rake geminabox:install        # Build and install testgem-0.1.0.gem into system gems
+rake geminabox:install:local  # Build and install testgem-0.1.0.gem into system gems without network access
+rake geminabox:release        # Create tag v0.1.0 and build and push testgem-0.1.0.gem to Rubygems
+</code></p>
+
+<h2 id="bundler-geminabox">bundler-geminabox</h2>
+<p>[https://github.com/sonots/bundler-geminabox:title]</p>
+
+<p>Rakefile:
+<code>ruby
+require "bundler/geminabox/gem_tasks"
+</code></p>
+
+<p>Rake Tasks:
+<code>bash
+$ bundle exec rake -T
+rake build              # Build testgem-0.1.0.gem into the pkg directory
+rake geminabox_release  # Create tag v0.1.0 and build and push testgem-0.1.0.gem to https://your.rubygems.org
+rake install            # Build and install testgem-0.1.0.gem into system gems
+rake install:local      # Build and install testgem-0.1.0.gem into system gems without network access
+rake release            # [WARN] Release to rubygems.org is prohibited, use rake geminabox_release
+</code></p>
+
+<p>このGemは<code>bundle gem</code>の所から面倒みてくれるみたいです。
+こっちのほうがうっかりrubygems.orgにリリースすることはないかもしれません。</p>
+
+<p>というかこのGemでいいような気がしてきました。</p>
+
+<p><code>
+GEMINABOX=https://your.rubygems.org bundle-geminabox gem foo
+      create  foo/Gemfile
+      create  foo/.gitignore
+      create  foo/lib/foo.rb
+      create  foo/lib/foo/version.rb
+      create  foo/LICENSE.txt
+      create  foo/foo.gemspec
+      create  foo/.consolerc
+      create  foo/Rakefile
+      create  foo/README.md
+       force  foo/Gemfile
+       force  foo/Rakefile
+</code></p>
+
+<h2 id="bundlergeminabox">bundler_geminabox</h2>
+
+<p>[https://github.com/joshkrueger/bundler_geminabox:title]</p>
+
+<p>Rakefile:
+<code>ruby
+require "bundler_geminabox/gem_tasks"
+</code></p>
+
+<p>Rake Tasks:
+<code>bash
+$ bundle exec rake -T
+rake build          # Build testgem-0.1.0.gem into the pkg directory
+rake install        # Build and install testgem-0.1.0.gem into system gems
+rake install:local  # Build and install testgem-0.1.0.gem into system gems without network access
+rake release        # Create tag v0.1.0 and build and push testgem-0.1.0.gem to your geminabox server
+</code></p>
+
+<p>ほぼ同じでした。</p>
+
+<h1 id="section-3">おわりに</h1>
+<p>急いでたのでろくに調べずに作ってしまったんですが、まあ普通に考えたら誰か作りますよねw</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/05/17/intro-wind-chime.html">機材紹介：ウィンドチャイム</a><small>May 17</small></h2><p>機材紹介その2はアイドルのバックバンドおじさんの秘密兵器、ウィンドチャイムです！
+おそらく我が家で一番の新参者です。</p>
+
+<p>[f:id:nownabe:20150517180427j:plain]</p>
+
+<p>KCというよくわからんメーカのTCH-1000というウィンドチャイムです。</p>
+
+<p>こういうパーカッション系の楽器って音の質が素直に値段に比例してるんですよ。
+なのでウィンドチャイムもめっちゃキラキラシャラランみたいな高いのが欲しかったんですが、そんなお金はないのでなんとか聴けるかなーぐらいの所に落ち着きました。</p>
+
+<p>[https://www.youtube.com/watch?v=CNqGHvxTGNs:embed:cite]</p>
+
+<p>こんな感じです。安物っぽい音ではありますが、バンドで使うと結構いい音に聞こえます。
+うちのは自重で傾いてしまってますが、そこはご愛嬌ですね！</p>
+
+<p>元々ウィンドチャイムは音が好きで欲しくて、去年の10月ぐらいにアイドルのコピーのバックバンドをやることになって買いました。
+10月から半年ぐらい大活躍だったんですが、最近は仕事から帰ってきて鳴らすぐらいにしか使ってません。</p>
+
+<p>もう使う予定もないんですがこのままお蔵入りになってしまうのは寂しい！
+どっかで使いたいですね。</p>
+
+<p>[https://www.youtube.com/watch?v=nDqaTXqCN-Q:embed:cite]</p>
+
+<p>[https://www.youtube.com/watch?v=D5WvS5gWSgU:embed:cite]</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/04/19/github-pages.html">Github Pagesが便利すぎてイイ</a><small>Apr 19</small></h2><p>見事に三日坊主になってしまってました。
+久しぶりに更新します。</p>
+
+<p>GWに企画してる<a href="http://unionfes.tojok-on.com/2015/">ライブのイベントサイト</a>をGithub Pagesで公開してます。
+サーバとか用意すんのめんどいしって理由でGithub Pagesにしたんですが、これがとても便利でした。</p>
+
+<p>[https://github.com/unionfes/unionfes.github.io:embed:cite]</p>
+
+<p>もちろんGithubの恩恵が受けられて、誰かがめんどくさい修正のプルリク作ってくれたり、誰かが勝手にサイトが更新してくれたり、とてもイイです。</p>
+
+<p>完全に自己満足でMiddlemanっていう静的サイトジェネレータとWerckerっていうCIサービスを組み合わせてデプロイまで自動化する仕組みを作ったんですが、これがまた完全に手間いらずで非常に便利です。
+そのうち詳しい方法を書こうと思います。</p>
+
+<p>HTMLしかわからない〜って人には少し敷居が高めですが、めちゃくちゃ便利なので今後サイト作る時もこの仕組でいきたいですね！
+特に複数人で更新するWebサイトにGithub Pagesはぴったりだと思います。</p>
+
+<p>Gitコマンドだけで更新からチェック、テスト、デプロイまでできるってのはいかにもモダンな感じでイケイケな雰囲気ですよね。
+もうFTPなんて卒業ですね！</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/14/serverfesta.html">サバフェス始まりました</a><small>Mar 14</small></h2><p>[f:id:nownabe:20150314035956p:plain]</p>
+
+<p>今日（昨日？）から始まったサバフェスというイベントに参加してます。</p>
+
+<p>[https://2015spring.serverfesta.info/:embed]</p>
+
+<p>ISUCONとかと似たようなイベントですが、インフラに特化しています。
+第2回となる今回はなんとFusion-ioのioDrive2搭載のサーバでMySQLの速さを競うという豪勢な大会です。</p>
+
+<p>僕は「社内から優勝者を出せ！」という無茶ぶりオファーの元参加することになりましたw</p>
+
+<p>インフラが本職でもないし、こんなハイスペックな物理マシンをDB専用としてチューニングなんてしたことないので探り探りな状況ですが、逆にそれがとても楽しいです。</p>
+
+<p>あと僕と一緒に無茶ぶりオファーを受けた先輩方がめちゃくちゃ頼りになるし、一緒にやってるとすごい勉強になります。</p>
+
+<p>こういうコンテストに参加するのは初めてなんですが、やっぱり高得点目指してチームで頑張るっていうのは楽しいですね〜。</p>
+
+<p>こういう機会を与えてくれた大会運営チームの皆さんには感謝です。
+色々苦労があったみたいですが、おかげさまでとても楽しませてもらってます。</p>
+
+<p>さて、せっかく出場してるので、優勝しますよ！</p>
+
+<p>（誰かioDriveのチューニング教えてください）</p>
+</article></div><p><a href="/blog/page/3/">Next page</a></p></div><aside><h2>Recent Articles</h2><ol><li><a href="/blog/2015/09/22/test.html">Example Article</a><span>Sep 22</span></li><li><a href="/blog/2015/08/31/redundant-geminabox.html">Gem in a Boxの冗長化</a><span>Aug 31</span></li><li><a href="/blog/2015/08/10/idcf-dns.html">お名前.comからIDCF DNSに移行した話</a><span>Aug 10</span></li><li><a href="/blog/2015/08/09/raspberry-pi-lchika.html">今更Raspberry PiでLチカやってみた</a><span>Aug  9</span></li><li><a href="/blog/2015/05/24/intro-headphone-amp.html">機材紹介：ヘッドホンアンプ</a><span>May 24</span></li><li><a href="/blog/2015/05/21/backup-to-idcf.html">超簡単にサーバのデータをIDCFオブストに定期バックアップするItamaeプラグイン</a><span>May 21</span></li><li><a href="/blog/2015/05/20/release-to-geminabox.html">Gem in a Boxに簡単にリリースできるGem作ったけどいっぱいあったのでまとめ</a><span>May 20</span></li><li><a href="/blog/2015/05/17/intro-wind-chime.html">機材紹介：ウィンドチャイム</a><span>May 17</span></li><li><a href="/blog/2015/04/19/github-pages.html">Github Pagesが便利すぎてイイ</a><span>Apr 19</span></li><li><a href="/blog/2015/03/14/serverfesta.html">サバフェス始まりました</a><span>Mar 14</span></li></ol><h2>Tags</h2><ol><li><a href="/blog/tags/band.html">band (2)</a></li><li><a href="/blog/tags/instruments.html">instruments (3)</a></li><li><a href="/blog/tags/drums.html">drums (2)</a></li><li><a href="/blog/tags/tech.html">tech (8)</a></li><li><a href="/blog/tags/ruby.html">ruby (4)</a></li><li><a href="/blog/tags/geminabox.html">geminabox (2)</a></li><li><a href="/blog/tags/itamae.html">itamae (1)</a></li><li><a href="/blog/tags/idcf.html">idcf (2)</a></li><li><a href="/blog/tags/diary.html">diary (4)</a></li><li><a href="/blog/tags/leveldb.html">leveldb (1)</a></li><li><a href="/blog/tags/ruboty.html">ruboty (1)</a></li><li><a href="/blog/tags/dns.html">dns (1)</a></li><li><a href="/blog/tags/raspberrypi.html">raspberrypi (1)</a></li><li><a href="/blog/tags/example.html">example (1)</a></li></ol><h2>By Year</h2><ol><li><a href="/blog/2015.html">2015 (15)</a></li></ol></aside></div></body></html>

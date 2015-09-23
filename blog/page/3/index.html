@@ -1,0 +1,177 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><title>nownab.log</title><meta content="IE=edge;chrome=1" http-equiv="X-UA-Compatible" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><link href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.light_blue-pink.min.css" rel="stylesheet" /><script src="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"></script><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /><link href="../../../stylesheets/blog.css" rel="stylesheet" /><link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/blog/feed.xml" /></head><body><div class="mdl-layout mdl-js-layout" id="container"><header><h1 id="title"><a href="/blog">nownab.log</a><small><i class="material-icons md-18">description</i><span id="subtitle">logger.level = Logger::DEBUG</span></small></h1></header><div id="main" role="main"><p>Page 3 of 3</p><p><a href="/blog/page/2/">Previous page</a></p><div class="mdl-grid" id="articles"><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/09/intro-electoric-drums.html">機材紹介：電子ドラム</a><small>Mar  9</small></h2><p>えんじにありんぐ的な話ばっかりだとバランスが悪いので、機材紹介します！
+我が家でも新参機材の電子ドラム、<a href="http://www.roland.co.jp/products/td-15kv/">Roland TD-15KV-S</a>です。
+名前はまだありません。募集中です。</p>
+
+<p>[f:id:nownabe:20150309003723j:plain]</p>
+
+<p>新参者といってももう1年ちょっと経ってますね。
+社会人になって初めてのボーナスでバーーーンと買ってやりました。</p>
+
+<p>追加シンバルも買って、ちゃんとドラムの基本セット揃ってるところがナイスですね。
+スネアだけじゃなくてタム類もリムをちゃんと認識してくれたり、ハイハットもちゃんとスタンドにセットできてオープンクローズがいい感じにできたり、なかなか優秀なやつです。</p>
+
+<p>音源もひと通り揃ってて、サンバ的なあれやら宇宙的なあれやらで何百時間でも遊べます。</p>
+
+<p>欲を言うとスプラッシュとかチャイナも欲しかったんですが、今の給料じゃ無理ーーーということでこれで落ち着きました。
+一応チャイナはライドのエッジに設定したり、カウベルをフロアのリムに設定したりと色々できるのでなんとかやりくりしてます。</p>
+
+<p>こいつを迎えるためだけに1階角部屋したんですが、さすがにドコドコすると生音が気になるのでバスドラのとこにはクッションつけてます。
+あと先輩が使ってた人工芝みたいなやつがなかなか良かったのでそのうち導入しようと画策中。</p>
+
+<p>電子ドラムめちゃくちゃいいんですが、やっぱり生ドラムと比べると物足りない感はありますね。
+そのうちスタジオ付きの家を建てて要塞を揃えたいです。</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/08/beginner-of-oss.html">OSS活動初心者になりました</a><small>Mar  8</small></h2><p>ついこないだまでOSS活動にあんまり興味がなかった。
+必要がなければ他人のコードも読まないし、自分のコードは自分で建てたGitサーバにプッシュしてました。</p>
+
+<p>ところがGithubを使うようになり、OSS活動っぽいことをやってみるとこれがとても楽しい。
+他の人のコードを読むのはとても勉強になるし、自分のやったことが目に見えるのがイイ。</p>
+
+<p>インプット→アウトプットのサイクルがいい感じで回ってるような気がします。</p>
+
+<p>まだまだ初心者なんで、そのうち有名なOSSに貢献したりとかしてみたいですね。
+もっというと有名なOSS作ってみたいですw</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/07/easysettings.html">EasySettingsをSettingslogicの替りにいかがでしょうか</a><small>Mar  7</small></h2><p>今までRailsとかその他諸々のアプリケーションで、定数の管理に<a href="https://github.com/settingslogic/settingslogic">Settingslogic</a>を使ってました。
+色々不満がありつつ使ってたんですが、この度<a href="https://rubygems.org/gems/easy_settings">EasySettings</a>というGemを新しく作りました。</p>
+
+<p>[https://github.com/nownabe/easy_settings:embed]</p>
+
+<p>[https://github.com/nownabe/easy_settings:title]</p>
+
+<p>元々はアプリ側でデフォルト値を設定したくて<a href="https://rubygems.org/gems/settingslogic_default">SettingslogicDefault</a>みたいなGemを作ったんですが、色々と限界を感じたのでもう新しいの作ってしまおうと。</p>
+
+<h2 id="section">初期化いらず</h2>
+<p>```ruby
+# EasySettings
+# いらない</p>
+
+<h1 id="settingslogic">Settingslogic</h1>
+<p>class Settings &lt; Settingslogic
+   source Rails.root.join("config/settings.yml").to_s
+end
+```</p>
+
+<h2 id="section-1">メソッド形式での動的代入ができる</h2>
+<p>```ruby
+# EasySettings
+&gt; EasySettings.foo ||= "bar"
+=&gt; "bar"</p>
+
+<h1 id="settingslogic-1">Settingslogic</h1>
+<blockquote>
+  <p>Settings.foo ||= "bar"
+Settingslogic::MissingSetting: Missing setting 'foo' in settings1.yml
+```</p>
+</blockquote>
+
+<h2 id="hash">ネストされたHashで同じキーが使える</h2>
+<p>というか使えないSettingslogicにびっくり。</p>
+
+<p>```ruby
+# EasySettings
+&gt; EasySettings["foo"] = {foo: "bar"}
+=&gt; {:foo=&gt;"bar"}
+&gt; EasySettings.foo.foo
+=&gt; "bar"</p>
+
+<h1 id="settingslogic-2">Settingslogic</h1>
+<blockquote>
+  <p>Settings["foo"] = {foo: "bar"}
+=&gt; {:foo=&gt;"bar"}
+Settings.foo.foo
+Settingslogic::MissingSetting: Missing setting 'foo' in settings.yml
+```</p>
+</blockquote>
+
+<h2 id="section-2">デフォルト値が設定できる</h2>
+<p>元々これをやりたかったんですが、あんまりいらない気もする。
+デフォルト値設定を簡潔に書きたくてこういう仕様にしました。</p>
+
+<p><code>ruby
+&gt; EasySettings.foo
+=&gt; nil
+&gt; EasySettings.has_key?(:foo)
+=&gt; false
+&gt; EasySettings.foo("bar")
+=&gt; "bar"
+&gt; EasySettings.foo
+=&gt; "bar"
+&gt; EasySettings.foo("baz")
+=&gt; "bar"
+</code></p>
+
+<p>こんなこともできます。</p>
+
+<p><code>ruby
+&gt; EasySettings.foo({}).bar("baz")
+=&gt; "baz"
+&gt; EasySettings.to_h
+=&gt; {"foo"=&gt;{"bar"=&gt;"baz"}}
+</code></p>
+
+<p>Settingslogicだとできない。</p>
+
+<p><code>ruby
+&gt; (Settings[:foo] ||= {})[:bar] ||= "baz"
+=&gt; "baz"
+&gt; Settings[:foo][:bar]
+=&gt; nil
+</code></p>
+
+<p>詳しい使い方はGithubのREADMEに書いてます。</p>
+
+<p>是非、使ってみてください。</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/01/ruboty-leveldb.html">RubotyのデータをLevelDBで永続化するruboty-leveldbというGemを作った</a><small>Mar  1</small></h2><h1 id="section">経緯</h1>
+<p>会社でチャットボットとして<a href="https://github.com/r7kamura/ruboty">Ruboty</a>を使ってます。</p>
+
+<p>Rubotyはデータの永続化にプラグインを使わないといけないんですが、今はRedis用のプラグインしか用意されていません。
+（もしかしたら誰か作ってるのがあるかも）</p>
+
+<p>おそらく、RubotyはHeroku + Redis To Goのような環境で運用されることを想定されていて、Redis用のプラグインしかないんだと思います。
+プライベートで使ってるのはその構成なんですが、会社では自前のサーバでDockerコンテナとして動作させています。</p>
+
+<p>外部のサーバに置きたくなくてそうしてるのでデータも内部に持ちたかったんですが、RubotyのためだけにRedisサーバ運用するのもなんだかなーとしばらくデータ永続化せずに使ってました。</p>
+
+<p>けどこのままはアカンなーということで、<a href="https://github.com/google/leveldb">LevelDB</a>を使ってRubotyのデータを永続化できる<a href="https://rubygems.org/gems/ruboty-leveldb">ruboty-leveldb</a>というプラグインを作成しました！</p>
+
+<h1 id="leveldb">なぜLevelDB？</h1>
+<p>正直言うと、余分なサーバ建てずにデータの永続化ができればテキストファイルでも他のKVSでもなんでも良かったんですが、使ってみたかったのでLevelDBにしました。</p>
+
+<p>Rubotyのデータぐらいだと、LevelDBが他のKVSに比べてどういいのかとかは全然見えません。</p>
+
+<p>個人的には<a href="http://fallabs.com/kyotocabinet/">KyotoCabinet</a>が好きで使ってたんですが、ほぼ同じ感覚で使えました。
+LevelDBが流行りならLevelDBでも全然いいなーという感想です。</p>
+
+<p>LevelDBについてはここがまとまってました。</p>
+
+<ul>
+  <li><a href="http://yosuke-furukawa.hatenablog.com/entry/2014/05/05/095207">LevelDB入門 (基本編)</a></li>
+</ul>
+
+<h1 id="section-1">使い方</h1>
+<p>Qiitaに書きました。</p>
+
+<ul>
+  <li><a href="http://qiita.com/nownabe/items/06977acec7f08133d8c9">Rubotyのデータ永続化にLevelDBを使う</a></li>
+</ul>
+
+<h1 id="section-2">感想</h1>
+<p>Rubotyまわりはとてもコードが綺麗でよく見てるんですが、本当に参考になります。
+ruboty-leveldbもほとんど<a href="https://github.com/r7kamura/ruboty-redis">ruboty-redis</a>まんまですw</p>
+
+<p>…今気づいたんですがRubotyのREADMEでruboty-leveldbが紹介されてる…！！
+ありがとうございます！！</p>
+
+<p>[https://github.com/r7kamura/ruboty:embed]</p>
+</article><article class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"><h2><a href="/blog/2015/03/01/beginning.html">ブログはじめよう</a><small>Mar  1</small></h2><p>だいぶ前に箱だけ作って全然投稿してなかったけど、こっちにも書いていこうと思います。</p>
+
+<p>SNSとかいろんなのがあってみんな使い分けどうしてるんでしょう。</p>
+
+<p>とりあえずはこんなかんじかなー</p>
+
+<ul>
+  <li>Twitter パブリック。つぶやき</li>
+  <li>Facebook のーパブリック。フレンドに見てほしいものを流す</li>
+  <li>Qiita パブリック。技術的な記事（ポエム禁止）</li>
+  <li>ブログ パブリック。雑多なこと</li>
+</ul>
+</article></div></div><aside><h2>Recent Articles</h2><ol><li><a href="/blog/2015/09/22/test.html">Example Article</a><span>Sep 22</span></li><li><a href="/blog/2015/08/31/redundant-geminabox.html">Gem in a Boxの冗長化</a><span>Aug 31</span></li><li><a href="/blog/2015/08/10/idcf-dns.html">お名前.comからIDCF DNSに移行した話</a><span>Aug 10</span></li><li><a href="/blog/2015/08/09/raspberry-pi-lchika.html">今更Raspberry PiでLチカやってみた</a><span>Aug  9</span></li><li><a href="/blog/2015/05/24/intro-headphone-amp.html">機材紹介：ヘッドホンアンプ</a><span>May 24</span></li><li><a href="/blog/2015/05/21/backup-to-idcf.html">超簡単にサーバのデータをIDCFオブストに定期バックアップするItamaeプラグイン</a><span>May 21</span></li><li><a href="/blog/2015/05/20/release-to-geminabox.html">Gem in a Boxに簡単にリリースできるGem作ったけどいっぱいあったのでまとめ</a><span>May 20</span></li><li><a href="/blog/2015/05/17/intro-wind-chime.html">機材紹介：ウィンドチャイム</a><span>May 17</span></li><li><a href="/blog/2015/04/19/github-pages.html">Github Pagesが便利すぎてイイ</a><span>Apr 19</span></li><li><a href="/blog/2015/03/14/serverfesta.html">サバフェス始まりました</a><span>Mar 14</span></li></ol><h2>Tags</h2><ol><li><a href="/blog/tags/band.html">band (2)</a></li><li><a href="/blog/tags/instruments.html">instruments (3)</a></li><li><a href="/blog/tags/drums.html">drums (2)</a></li><li><a href="/blog/tags/tech.html">tech (8)</a></li><li><a href="/blog/tags/ruby.html">ruby (4)</a></li><li><a href="/blog/tags/geminabox.html">geminabox (2)</a></li><li><a href="/blog/tags/itamae.html">itamae (1)</a></li><li><a href="/blog/tags/idcf.html">idcf (2)</a></li><li><a href="/blog/tags/diary.html">diary (4)</a></li><li><a href="/blog/tags/leveldb.html">leveldb (1)</a></li><li><a href="/blog/tags/ruboty.html">ruboty (1)</a></li><li><a href="/blog/tags/dns.html">dns (1)</a></li><li><a href="/blog/tags/raspberrypi.html">raspberrypi (1)</a></li><li><a href="/blog/tags/example.html">example (1)</a></li></ol><h2>By Year</h2><ol><li><a href="/blog/2015.html">2015 (15)</a></li></ol></aside></div></body></html>
