@@ -7,7 +7,7 @@ module.exports = {
     html: "./index.html"
   },
   output: {
-    path: __dirname + "/docs",
+    path: __dirname,
     filename: "bundle.js"
   },
   devtool: "inline-source-map",
@@ -27,7 +27,7 @@ module.exports = {
       {
         host: "localhost",
         port: 3000,
-        server: { baseDir: ["docs"] }
+        server: { baseDir: ["."] }
       }
     )
   ]
