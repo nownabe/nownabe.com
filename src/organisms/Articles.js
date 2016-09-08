@@ -9,6 +9,12 @@ export default () => (
           Emojiで楽しく綺麗なコミットを手に入れる
         </a>
       </li>
+      <li>
+        <a href="http://qiita.com/nownabe/items">Qiita</a>
+      </li>
+      <li>
+        <a href="https://blog.nownabe.com/">nownab.log</a>
+      </li>
     </ul>
   </section>
 )
