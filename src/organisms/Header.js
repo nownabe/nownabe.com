@@ -5,5 +5,6 @@ export default () => (
   <header>
     <Icon />
     <h1>nownabe.github.io</h1>
+    <p>Under construction</p>
   </header>
 )

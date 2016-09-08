@@ -1,15 +1,19 @@
 import React from "react"
 import styles from "./App.css"
 import Header from "../organisms/Header"
-import Presentation from "../organisms/Presentation"
-import Social from "../organisms/Social"
+import Products from "../organisms/Products"
+import Articles from "../organisms/Articles"
+import Presentations from "../organisms/Presentations"
+import Socials from "../organisms/Socials"
 import Footer from "../organisms/Footer"
 
 export default () => (
   <div className={styles.container}>
     <Header />
-    <Presentation />
-    <Social />
+    <Products />
+    <Articles />
+    <Presentations />
+    <Socials />
     <Footer />
   </div>
 )

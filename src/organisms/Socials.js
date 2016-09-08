@@ -2,7 +2,7 @@ import React from "react"
 
 export default () => (
   <section>
-    <h2>Social</h2>
+    <h2>Socials</h2>
     <ul>
       <li><a href="https://github.com/nownabe">GitHub</a></li>
       <li><a href="https://qiita.com/nownabe">Qiita</a></li>
