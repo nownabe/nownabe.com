@@ -1,10 +1,10 @@
 import React from "react"
 import styles from "./App.css"
 import Header from "../organisms/Header"
-import Products from "../organisms/Products"
-import Articles from "../organisms/Articles"
-import Presentations from "../organisms/Presentations"
-import Socials from "../organisms/Socials"
+import Products from "../pages/Products"
+import Articles from "../pages/Articles"
+import Presentations from "../pages/Presentations"
+import Socials from "../pages/Socials"
 import Footer from "../organisms/Footer"
 
 export default () => (
