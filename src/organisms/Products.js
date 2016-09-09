@@ -5,7 +5,7 @@ export default () => (
     <h2>Products</h2>
     <ul>
       <li>
-        <a href="https://x86-emulator.herokuapp.com/">x86-emulator</a>
+        <a href="https://x86-emulator.nownabe.com/">x86-emulator</a>
       </li>
       <li>
         <a href="https://rubygems.org/profiles/nownabe">RubyGems</a>
