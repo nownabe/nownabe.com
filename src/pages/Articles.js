@@ -1,15 +1,24 @@
 import React from "react"
-import LinkListSection from "../templates/LinkListSection"
+import LinkContentsSection from "../organisms/LinkContentsSection"
 
 export default () => {
-  let links = [
+  let contents = [
     {
       url: "http://memo.goodpatch.co/2016/07/beautiful-commits-with-emojis/",
-      title: "Emojiで楽しく綺麗なコミットを手に入れる"
+      title: "Emojiで楽しく綺麗なコミットを手に入れる",
+      description: "hogehoge"
     },
-    {url: "http://qiita.com/nownabe/items", title: "Qiita"},
-    {url: "https://blog.nownabe.com/", title: "nownab.log"}
+    {
+      url: "http://qiita.com/nownabe/items",
+      title: "Qiita",
+      description: "hogehoge"
+    },
+    {
+      url: "https://blog.nownabe.com/",
+      title: "nownab.log",
+      description: "hogehoge"
+    }
   ]
 
-  return <LinkListSection title="Articles" links={links} />
+  return <LinkContentsSection title="Articles" contents={contents} />
 }

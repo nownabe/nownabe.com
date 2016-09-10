@@ -1,6 +1,6 @@
 import React from "react"
-import Section from "../organisms/Section"
-import LinkList from "../organisms/LinkList"
+import Section from "./Section"
+import LinkList from "./LinkList"
 
 export default ({ title, links }) => (
   <Section title={title} child={<LinkList list={links} />} />

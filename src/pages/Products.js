@@ -1,17 +1,19 @@
 import React from "react"
-import LinkListSection from "../templates/LinkListSection"
+import LinkContentsSection from "../organisms/LinkContentsSection"
 
 export default () => {
-  let links = [
+  let contents = [
     {
       url: "https://x86-emulator.nownabe.com/",
-      title: "x86-emulator"
+      title: "x86-emulator",
+      description: "x86 assembler and x86 emulator for learning about x86 assembly."
     },
     {
       url: "https://rubygems.org/profiles/nownabe",
-      title: "RubyGems"
+      title: "RubyGems",
+      description: "All RubyGems"
     }
   ]
 
-  return <LinkListSection title="Products" links={links} />
+  return <LinkContentsSection title="Products" contents={contents} />
 }

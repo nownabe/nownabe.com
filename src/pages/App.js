@@ -11,8 +11,8 @@ export default () => (
   <div className={styles.container}>
     <Header />
     <Products />
-    <Articles />
     <Presentations />
+    <Articles />
     <Socials />
     <Footer />
   </div>

@@ -1,5 +1,5 @@
 import React from "react"
-import LinkListSection from "../templates/LinkListSection"
+import LinkListSection from "../organisms/LinkListSection"
 
 export default () => {
   let links = [
