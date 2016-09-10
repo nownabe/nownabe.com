@@ -1,12 +1,12 @@
 import React from "react"
-import LinkListSection from "../organisms/LinkListSection"
+import LinkImagesSection from "../organisms/LinkImagesSection"
 
 export default () => {
   let links = [
-    {url: "https://github.com/nownabe", title: "GitHub"},
-    {url: "https://qiita.com/nownabe", title: "Qiita"},
-    {url: "https://twitter.com/nownabe", title: "Twitter"},
-    {url: "https://facebook.com/nownabe", title: "Facebook"}
+    {url: "https://github.com/nownabe", image: "github.png"},
+    {url: "https://qiita.com/nownabe", image: "github.png"},
+    {url: "https://twitter.com/nownabe", image: "github.png"},
+    {url: "https://facebook.com/nownabe", image: "github.png"}
   ]
-  return <LinkListSection title="Socials" links={links} />
+  return <LinkImagesSection title="Socials" links={links} />
 }
