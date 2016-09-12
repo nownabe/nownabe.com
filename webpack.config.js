@@ -24,7 +24,6 @@ module.exports = {
     extensions: ["", ".js"]
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
     new BrowserSyncPlugin(
       {
         host: "localhost",
