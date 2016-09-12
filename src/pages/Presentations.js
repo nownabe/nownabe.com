@@ -7,7 +7,7 @@ export default () => {
       url: "http://www.slideshare.net/ShogoWatanabe/percona-meetup-jp",
       title: "Percona XtraDB Cluster",
       description:
-        "Overview of Percona XtraDB Cluster."
+        "Overview of Percona XtraDB Cluster at Percona Meetup Tokyo vol.1."
     },
     {
       url: "https://speakerdeck.com/nownabe/scalable-architecture-with-rabbitmq",

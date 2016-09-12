@@ -7,9 +7,9 @@ export default () => {
       url: "https://x86-emulator.nownabe.com/",
       title: "x86-emulator",
       description:
-        "x86 assembler and x86 emulator for learning about x86 assembly created with React/Redux. \
+        "Emulator of x86 CPU to learn about x86 assembly, created with React/Redux. \
         This emulator can execute i386 assembly programs and show data in registers and memory step by step. \
-        You can learn x86 assembly using it."
+        It allows you to learn x86 assembly."
     },
     {
       url: "https://rubygems.org/profiles/nownabe",
