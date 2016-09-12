@@ -3,7 +3,8 @@
 }
 
 .title {
-  border-bottom: 3px solid rgba(0, 0, 0, 0.09);
+  border-bottom: 3px solid #2c559B;
+  color: #2c5598;
   font-weight: bold;
   font-size: 2rem;
   margin-bottom: 1rem;

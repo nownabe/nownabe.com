@@ -8,6 +8,5 @@ export default () => (
       <Icon />
       <h1 className={styles.title}>nownabe.github.io</h1>
     </div>
-    <p>Under construction</p>
   </header>
 )

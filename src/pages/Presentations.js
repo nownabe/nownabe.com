@@ -6,12 +6,14 @@ export default () => {
     {
       url: "http://www.slideshare.net/ShogoWatanabe/percona-meetup-jp",
       title: "Percona XtraDB Cluster",
-      description: "hogehogehoge"
+      description:
+        "Overview of Percona XtraDB Cluster."
     },
     {
       url: "https://speakerdeck.com/nownabe/scalable-architecture-with-rabbitmq",
       title: "Scalable Architecture with RabbitMQ",
-      description: "hogehogehoge"
+      description:
+        "Explains scalable microservices with RabbitMQ."
     }
   ]
 
