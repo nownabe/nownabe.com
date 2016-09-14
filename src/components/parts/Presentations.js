@@ -1,5 +1,5 @@
 import React from "react"
-import LinkContentsSection from "../components/organisms/LinkContentsSection"
+import LinkContentsSection from "../organisms/LinkContentsSection"
 
 export default () => {
   let contents = [
