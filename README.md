@@ -4,10 +4,10 @@ nownabe.github.io
 # Development
 ## Browser Sync
 ```bash
-webpack --watch
+npm start
 ```
 
 ## Build
 ```bash
-webpack --optimize-minimize
+npm run build
 ```
