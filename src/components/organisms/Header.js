@@ -1,5 +1,5 @@
 import React from "react"
-import Icon from "../molecules/Icon"
+import Icon from "../molecules/ProfileIcon"
 import styles from "./Header.css"
 
 export default () => (

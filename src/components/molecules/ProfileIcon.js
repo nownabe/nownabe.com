@@ -1,11 +1,10 @@
 import React from "react"
-import styles from "./Icon.css"
-import icon from "./Icon.jpg"
+import styles from "./ProfileIcon.css"
 
 export default () => (
   <img
     className={styles.icon}
-    src={icon}
+    src="images/profile_icon.jpg"
     alt="icon"
   />
 )

@@ -1,5 +1,5 @@
 import React from "react"
-import LinkImagesSection from "../organisms/LinkImagesSection"
+import LinkImagesSection from "../components/organisms/LinkImagesSection"
 
 export default () => {
   let links = [
