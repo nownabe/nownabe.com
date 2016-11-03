@@ -13,7 +13,7 @@ export default () => {
     },
     {
       url: "http://unionfes.tojok-on.com/2015/",
-      title: "TOJO K-ON Union Fes '15",
+      title: "TOJO K-ON Union Fes '15 Website",
       description:
         "Designed and built a website for a live concert. \
         It's responsive and parallax. \
