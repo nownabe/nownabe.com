@@ -14,14 +14,14 @@ module.exports = {
   devtool: "inline-source-map",
   module: {
     loaders: [
-      {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+      {test: /\.js|\.jsx$/, exclude: /node_modules/, loader: "babel-loader"},
       {test: /\.css$/, loaders: ["style", "css?modules"]},
       {test: /\.html$/, loader: "file?name=[name].[ext]"},
       {test: /\.jpg$/, loader: "file?name=[path][name].[ext]"}
     ]
   },
   resolve: {
-    extensions: ["", ".js"]
+    extensions: ["", ".js", ".jsx"]
   },
   plugins: [
     new BrowserSyncPlugin(
