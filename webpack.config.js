@@ -1,25 +1,23 @@
 module.exports = {
   context: __dirname + "/src",
   entry: {
-    javascript: "./index.js",
-    html: "./index.html"
+    bundle: "./index.js",
   },
   output: {
     path: __dirname,
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   devtool: "inline-source-map",
   module: {
     loaders: [
       {test: /\.js|\.jsx$/, exclude: /node_modules/, loader: "babel-loader"},
-      {test: /\.css$/, loaders: ["style", "css?modules"]},
-      {test: /\.html$/, loader: "file?name=[name].[ext]"},
-      {test: /\.jpg$/, loader: "file?name=[path][name].[ext]"}
+      {test: /\.css$/, loaders: ["style-loader", "css-loader?modules"]},
+      {test: /\.jpg$/, loader: "file-loader?name=[path][name].[ext]"}
     ]
   },
   resolve: {
-    root: [__dirname + "/src/components"],
-    extensions: ["", ".js", ".jsx"]
+    modules: [__dirname + "/src/components", __dirname + "/node_modules"],
+    extensions: [".js", ".jsx"]
   },
   devServer: {
     historyApiFallback: true
