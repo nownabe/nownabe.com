@@ -5,7 +5,7 @@ import styles from './styles.css';
 export default () => (
   <img
     className={styles.icon}
-    src="images/profile_icon.jpg"
+    src="images/profile_icon_2017.png"
     alt="icon"
   />
 );

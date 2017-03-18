@@ -6,7 +6,7 @@ import Icon from './Icon';
 import styles from './styles.css';
 
 export default () => (
-  <header>
+  <header className={styles.header}>
     <div className={styles.titleContainer}>
       <Icon />
       <h1 className={styles.title}>
