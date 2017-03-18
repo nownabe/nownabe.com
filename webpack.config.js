@@ -1,6 +1,3 @@
-var webpack = require("webpack")
-var BrowserSyncPlugin = require("browser-sync-webpack-plugin")
-
 module.exports = {
   context: __dirname + "/src",
   entry: {
@@ -24,13 +21,7 @@ module.exports = {
     root: [__dirname + "/src/components"],
     extensions: ["", ".js", ".jsx"]
   },
-  plugins: [
-    new BrowserSyncPlugin(
-      {
-        host: "localhost",
-        port: 3000,
-        server: { baseDir: ["."] }
-      }
-    )
-  ]
+  devServer: {
+    historyApiFallback: true
+  }
 }
