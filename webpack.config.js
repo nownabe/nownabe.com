@@ -1,35 +1,25 @@
-var webpack = require("webpack")
-var BrowserSyncPlugin = require("browser-sync-webpack-plugin")
-
 module.exports = {
   context: __dirname + "/src",
   entry: {
-    javascript: "./index.js",
-    html: "./index.html"
+    bundle: "./index.js",
   },
   output: {
     path: __dirname,
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   devtool: "inline-source-map",
   module: {
     loaders: [
-      {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
-      {test: /\.css$/, loaders: ["style", "css?modules"]},
-      {test: /\.html$/, loader: "file?name=[name].[ext]"},
-      {test: /\.jpg$/, loader: "file?name=[path][name].[ext]"}
+      {test: /\.js|\.jsx$/, exclude: /node_modules/, loader: "babel-loader"},
+      {test: /\.css$/, loaders: ["style-loader", "css-loader?modules"]},
+      {test: /\.jpg$/, loader: "file-loader?name=[path][name].[ext]"}
     ]
   },
   resolve: {
-    extensions: ["", ".js"]
+    modules: [__dirname + "/src/components", __dirname + "/node_modules"],
+    extensions: [".js", ".jsx"]
   },
-  plugins: [
-    new BrowserSyncPlugin(
-      {
-        host: "localhost",
-        port: 3000,
-        server: { baseDir: ["."] }
-      }
-    )
-  ]
+  devServer: {
+    historyApiFallback: true
+  }
 }
