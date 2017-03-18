@@ -1,9 +1,9 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import Icon from "./Icon"
+import Icon from './Icon';
 
-import styles from "./styles.css"
+import styles from './styles.css';
 
 export default () => (
   <header>
@@ -14,4 +14,4 @@ export default () => (
       </h1>
     </div>
   </header>
-)
+);

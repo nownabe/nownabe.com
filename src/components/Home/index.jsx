@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-import Works from './Works'
-import Materials from './Materials'
-import Articles from './Articles'
-import Socials from './Socials'
+import Works from './Works';
+import Materials from './Materials';
+import Articles from './Articles';
+import Socials from './Socials';
 
 export default () => (
   <div>
@@ -12,4 +12,4 @@ export default () => (
     <Articles />
     <Socials />
   </div>
-)
+);
