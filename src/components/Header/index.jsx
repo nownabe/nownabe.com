@@ -15,7 +15,7 @@ export default () => (
       <div className={styles.introduction}>
         <p>
           Hello. I'm Shogo Watanabe, a software engineer from Japan.
-          I like coding, traveling, reading comics, playing drums, playing online games.
+          I like coding, traveling, reading comics, playing drums and playing online games.
           Now I'm working on web development.
         </p>
       </div>
