@@ -1,0 +1,13 @@
+.titleContainer {
+  display: inline-flex;
+  align-items: center;
+}
+
+.title {
+  margin-left: 1rem;
+}
+
+.link {
+  color: #3c4a60;
+  text-decoration: none;
+}
