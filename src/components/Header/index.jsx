@@ -10,7 +10,7 @@ export default () => (
     <div className={styles.titleContainer}>
       <Icon />
       <h1 className={styles.title}>
-        <Link to="/" className={styles.link}>nownabe.github.io</Link>
+        <Link to="/" className={styles.link}>nownabe</Link>
       </h1>
     </div>
   </header>
