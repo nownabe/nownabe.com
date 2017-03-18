@@ -1,6 +1,6 @@
-import React from "react"
+import React from 'react';
 
-import styles from "./styles.css"
+import styles from './styles.css';
 
 export default () => (
   <img
@@ -8,4 +8,4 @@ export default () => (
     src="images/profile_icon.jpg"
     alt="icon"
   />
-)
+);
