@@ -8,10 +8,15 @@
 }
 
 .title {
-  margin-left: 1rem;
+  margin-bottom: 2rem;
 }
 
 .link {
   color: #3c4a60;
   text-decoration: none;
+}
+
+.introduction {
+  margin-left: 1rem;
+  text-align: left;
 }
