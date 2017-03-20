@@ -5,7 +5,7 @@ import Items from 'common/partials/Items';
 
 const contents = [
   {
-    url: 'https://x86-emulator.nownabe.com/',
+    url: 'https://x86-board.nownabe.com/',
     title: 'x86 Board',
     description:
       `An emulator of x86 CPU to learn about x86 assembly, created with React/Redux.
