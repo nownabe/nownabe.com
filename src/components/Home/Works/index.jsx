@@ -18,11 +18,9 @@ const contents = [
     description: 'RubyGems I released.',
   },
   {
-    url: 'https://github.com/nownabe/cryptography',
-    title: 'cryptography',
-    description:
-      `A simple CLI tool to encrypt/decrypt files with secret password.
-      It is written by Golang.`,
+    link: '/tools',
+    title: 'Tools',
+    description: 'Tools I released.',
   },
   {
     url: 'http://unionfes.tojok-on.com/2015/',
