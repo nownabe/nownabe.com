@@ -9,9 +9,10 @@ module.exports = {
     "import/resolver": "webpack"
   },
   "globals": {
-    "document": true
+    "window": true
   },
   "rules": {
-    "react/prop-types": "off"
+    "react/jsx-filename-extension": "off", // Because of Next.js
+    "react/prop-types": "off",
   }
 };
