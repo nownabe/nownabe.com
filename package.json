@@ -8,7 +8,6 @@
   },
   "scripts": {
     "build": "next build && next export",
-    "deploy": "npm run build && ./deploy",
     "lint": "eslint --fix pages/**/*.js components/**/*.js",
     "start": "next"
   },
