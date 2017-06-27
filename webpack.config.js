@@ -1,10 +1,11 @@
 module.exports = {
   context: __dirname + "/src",
   entry: {
-    bundle: "./index.js",
+    index: "./index.js",
+    //bundle: "./index.js",
   },
   output: {
-    path: __dirname,
+    path: __dirname + "/pages",
     filename: "[name].js"
   },
   devtool: "inline-source-map",
