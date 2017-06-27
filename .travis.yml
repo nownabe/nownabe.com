@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - '7'
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+script:
+  - npm run build
+
+deploy:
+  local_dir: out
+  target_branch: gh-pages
+  email: nownabe@gmail.com
+  name: nownabe
+  provider: pages
+  skip_cleanup: true
+  github_token: "$GITHUB_TOKEN"
+  on:
+    branch: master
+
+env:
+  global:
+    secure: URFy47VN+MaaJ8LJrnxNsk9UFc3DtMvFQ/2yg1u1C9MxQfrTS1hUif7xqKT8DUnVE+Yx4pK0mNJHA7B2LoK63EHQfWjVDQZxKZjm9ubqpnUUscfXrEkqsinLW6WLxk5PjuWp/MWWFoz/loyGiFGhjvvI8gkBVrbIF2F9VEy3pAGqfNwLJeaxG9MDngQ4YmH5l7BQKy9Mpi1PfKG5EsIoXLtU55/2ukCz8bT65nqPU2/BvI5lQGeAccJ1tT18OSsHt5g8DoEej/kkQNvmqI7J+aHQgAO+jeN6DTlR6anS6zmEFBplvvhCHgCtPqjNSjy3I0iRXns0Yusl0oY2nf26WTyPWWfubfPG0PUs2h7KQ/gLA2gEMkHuIXZQ1Jd8gTIzkXb00VSkpHE+vMNUiVOW+qaSden/g2nCWY2RJs3BxtpcM/jurVh9d9ARL7JwHrIRJpJJ1opL6DngeVz/MQUVthc/DkfqAZVtuYsV08sDMPcfSOiABBNJsD2ev/Ijy5sYa3dKLS6HqxiJQfOabcJGmUO/AOTiw8Or70XlCD//E1doWu3abx5Lm6E7U6Zd9YbZhbTNFlqXj2TcfK+420zP8rw3me+CzooRE6uS7YBz5utf8G/ffxdw11sgBTuzPgRCRM/7EKnRWchKdGXrNMTficiC6mHxQyAK4hO/msw/a6s=
