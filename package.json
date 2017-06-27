@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build": "next build && next export",
-    "start": "next",
-    "lint": "eslint --fix pages/**/*.js components/**/*.js"
+    "deploy": "npm run build && ./deploy",
+    "lint": "eslint --fix pages/**/*.js components/**/*.js",
+    "start": "next"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,7 @@
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.0",
-    "gh-pages": "^1.0.0"
+    "eslint-plugin-react": "^6.10.0"
   },
   "dependencies": {
     "next": "3.0.0-beta14",
