@@ -20,7 +20,7 @@ deploy:
   skip_cleanup: true
   github_token: "$GITHUB_TOKEN"
   on:
-    branch: master
+    branch: source
 
 env:
   global:
