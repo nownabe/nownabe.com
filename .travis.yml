@@ -13,7 +13,7 @@ script:
 
 deploy:
   local_dir: out
-  target_branch: gh-pages
+  target_branch: master
   email: nownabe@gmail.com
   name: nownabe
   provider: pages
