@@ -61,10 +61,8 @@
       text-align: center;
     }
     nav ul { list-style: none; }
-    nav ul li {
-      display: inline;
-      margin: 0 1rem;
-    }
+    nav ul li { display: inline; }
+    nav ul li:not(:last-child)::after { content: " /" }
     nav ul li a { color: hsla(217, 38%, 20%, 1.0); }
     nav ul li a:hover { text-decoration: underline; }
 
