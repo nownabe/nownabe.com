@@ -15,22 +15,15 @@
       text-decoration: none;
     }
 
-    @font-face {
-      font-family: "NotoLight";
-      font-style: normal;
-      font-weight: 300;
-      src:
-        local("Noto Sans"),
-        url("fonts/NotoSans-Light.ttf") format("truetype");
-    }
-
     html { font-size: 110%; }
     body {
       max-width: 640px;
       margin: 0 auto;
       padding: 2rem 1rem;
       font-size: 1rem;
-      font-family: NotoLight, "Lato", Arial, "ヒラギノ角ゴPro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+      font-family: "Noto Sans", "Lato", Arial, "ヒラギノ角ゴPro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+      font-style: normal;
+      font-weight: 300;
       color: hsla(217, 38%, 31%, 1.0);
       line-height: 1.4;
     }
@@ -333,5 +326,18 @@
   <footer>
     <p>&copy; 2016 nownabe</p>
   </footer>
+
+  <script>
+    const font = new FontFace(
+      "Noto Sans Light",
+      "url(fonts/NotoSans-Light.ttf)", {
+        style: "normal",
+        weight: "300",
+      });
+    font.load().then((ff) => {
+      document.fonts.add(ff);
+      document.body.style.fontFamily = ff.family;
+    });
+  </script>
 </body>
 </html>
