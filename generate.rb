@@ -12,9 +12,9 @@ require "optparse"
 require "redcarpet"
 
 class Generator
-  DEFAULT_README_PATH = File.expand_path("./src/README.md")
-  DEFAULT_TEMPLATE_PATH = File.expand_path("./index.html.erb")
-  DEFAULT_OUTPUT_PATH = File.expand_path("./dist/index.html")
+  DEFAULT_README_PATH = File.expand_path("./src/README.md").freeze
+  DEFAULT_TEMPLATE_PATH = File.expand_path("./index.html.erb").freeze
+  DEFAULT_OUTPUT_PATH = File.expand_path("./dist/index.html").freeze
 
   attr_reader :readme_path, :template_path, :output_path
 
@@ -29,7 +29,7 @@ class Generator
   end
 
   def generate
-    body = parser.render(raw_markdown)
+    body = parser.render(File.read(readme_path))
     html = template.result_with_hash(body:)
     File.write(output_path, html)
   end
@@ -37,18 +37,7 @@ class Generator
   private
 
   def parser
-    @parser ||= Redcarpet::Markdown.new(
-      renderer,
-      tables: true,
-      fenced_code_blocks: true,
-      autolink: true,
-      strikethrough: true,
-      footnotes: true,
-    )
-  end
-
-  def raw_markdown
-    @raw_markdown ||= File.read(readme_path)
+    Redcarpet::Markdown.new(renderer)
   end
 
   def renderer
@@ -59,7 +48,7 @@ class Generator
   end
 
   def template
-    @template ||= ERB.new(File.read(template_path))
+    ERB.new(File.read(template_path))
   end
 end
 
