@@ -8,6 +8,7 @@ gemfile(true) do
 end
 
 require "erb"
+require "optparse"
 require "redcarpet"
 
 class Generator
@@ -22,9 +23,9 @@ class Generator
     template_path: DEFAULT_TEMPLATE_PATH,
     output_path: DEFAULT_OUTPUT_PATH
   )
-    @readme_path = readme_path
-    @template_path = template_path
-    @output_path = output_path
+    @readme_path = File.expand_path(readme_path)
+    @template_path = File.expand_path(template_path)
+    @output_path = File.expand_path(output_path)
   end
 
   def generate
@@ -62,4 +63,11 @@ class Generator
   end
 end
 
-Generator.new.generate
+opt = OptionParser.new
+params = {}
+opt.on("-r README_PATH") { |v| params[:readme_path] = v }
+opt.on("-t TEMPLATE_PATH") { |v| params[:template_path] = v }
+opt.on("-o OUTPUT_PATH") { |v| params[:output_path] = v }
+opt.parse!(ARGV)
+
+Generator.new(**params).generate
